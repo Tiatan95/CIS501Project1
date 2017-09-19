@@ -18,6 +18,7 @@ namespace Project1
 
         /// <summary>
         /// Got the enumeration get values from MSDN 
+        /// link: https://msdn.microsoft.com/en-us/library/system.enum.getvalues(v=vs.110).aspx 
         /// </summary>
         public Deck()
         {
