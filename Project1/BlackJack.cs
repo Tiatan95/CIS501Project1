@@ -33,7 +33,23 @@ namespace Project1
 
                 if (bankrupt)
                     break;
+                if (!checkMoreGames())
+                    break;
             }
+        }
+        private bool checkMoreGames()
+        {
+            string answer = " ";
+            do
+            {
+                Console.Write("More Games?(Y or N) ");
+                answer = Console.ReadLine().ToUpper();
+            }while(answer[0] != 'Y' && answer[0] != 'N');
+            if(answer[0] == 'Y')
+            {
+                return true;
+            }
+            return false;
         }
 
         private void playOneGame()
@@ -62,15 +78,23 @@ namespace Project1
                 }            
             }
             Console.WriteLine("Your Hand: " + customer.ToString() + " Hand Value:" + customer.HandValue);
-            Console.WriteLine("Dealer Hand: " + dealer.ToString() + " Hand Value:" + dealer.HandValue);
+            Console.WriteLine("Dealer Hand: " + dealer.ToString());
             if (testSurrender())
                 return;
             customerTurn(out bust);
             if (bust)
             {
                 Console.WriteLine("BUST");
+                return; 
+            }
+            dealerTurn(out bust);
+            if(bust)
+            {
+                
+                Console.WriteLine("Dealer BUST");
                 return;
             }
+            determineWinner();
 
         }
         private void determineWinner()
@@ -97,7 +121,7 @@ namespace Project1
         private void dealerTurn(out bool b)
         {
             b = false;
-            dealer.flipCard(2);
+            dealer.flipCard(1);
             Console.WriteLine("Dealer Hand: " + dealer.ToString() + " Hand Value:" + dealer.HandValue);
             while (dealer.HandValue < 17)
             {
@@ -141,8 +165,9 @@ namespace Project1
                         b = true;
                         return;
                     }
+                    answer = " ";
                 }
-                
+               
             }
         }
 
@@ -194,7 +219,6 @@ namespace Project1
             customer.Draw(Console.ReadLine().ToUpper(), true);
             Console.Write("Input 2nd card for dealer (3H, AD, TC, etc. or XX to draw from deck) : ");
             dealer.Draw(Console.ReadLine().ToUpper(), false);
-            dealer.getHandValue();
             customer.getHandValue();
 #else
             customer.Draw("XX", true);

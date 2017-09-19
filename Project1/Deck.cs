@@ -22,13 +22,12 @@ namespace Project1
         /// </summary>
         public Deck()
         {
-            var s = Enum.GetValues(typeof(CardSuit));
             int index = 0;
-            foreach(CardSuit i in s)
-            {
+            for(int i = 1; i < 5; i++)
+            { 
                 for(int j = 1; j < RANKS;++j)
                 {
-                    Card newCard = new Card(j, i);
+                    Card newCard = new Card(j,(CardSuit)i);
                     deck[index] = newCard;
                     index++;
                 }
@@ -63,7 +62,7 @@ namespace Project1
         }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////EDIT
-        public static Card Draw(string c)
+        public Card Draw(string c)
         {
 #if DEBUG
             if (c.Equals("XX"))

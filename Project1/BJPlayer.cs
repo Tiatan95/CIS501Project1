@@ -9,6 +9,7 @@ namespace Project1
     class BJPlayer
     {
         protected Card[] hand;
+        private Deck deck;
         private int topCardIndex;
         private int handValue;
         int numCards = 0;
@@ -24,6 +25,7 @@ namespace Project1
             numAces = 0;
             //////////////////////////////////////////////////////////////////////////////EDIT
             topCardIndex = d.TopCardIndex;
+            deck = d;
             hand = new Card[LARGEST_HAND_SIZE];
             //////////////////////////////////////////////////////////////////////////////EDIT
             handString = new StringBuilder();
@@ -57,7 +59,7 @@ namespace Project1
 ///////////////////////////////////////////////////////////////EDIT
         public void Draw(string s,bool b)
         {
-            Card newCard = Deck.Draw(s.ToUpper());
+            Card newCard = deck.Draw(s.ToUpper());
             newCard.FaceUp = b;
             handString.Append(newCard.ToString()+ ", ");
             if(newCard.Rank == 1)
@@ -65,8 +67,8 @@ namespace Project1
                 numAces++;
             }
             hand[numCards] = newCard;
+            this.getHandValue();
             numCards++;
-           
         }
 ///////////////////////////////////////////////////////////////EDIT
         public void ReturnHandCardsToDeck()
@@ -86,6 +88,7 @@ namespace Project1
 
         public void getHandValue()
         {
+            handValue = 0;
             for(int i =0; i < numCards; i++)
             {
                 if (hand[i].Rank > 9)

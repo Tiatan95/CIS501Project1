@@ -8,10 +8,10 @@ namespace Project1
 {
     public enum CardSuit
     {
-        C = 'C',
-        H = 'H',
-        D = 'D',
-        S = 'S'
+        C = 1,
+        H = 2,
+        D = 3,
+        S = 4
     }
 
     class Card
@@ -65,6 +65,10 @@ namespace Project1
                 if (rank == 1)
                 {
                     c = ("A" + suit.ToString());
+                }
+                else if( rank == 10)
+                {
+                    c = ("T" + suit.ToString());
                 }
                 else if (rank == 11)
                 {
