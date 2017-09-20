@@ -80,6 +80,7 @@ namespace Project1
                 {
                     Console.WriteLine("You got Natural21:  " + ((int)(betAmount * (decimal)2.5)) + " Goes to You from Dealer");
                     customer.Money += (int)(betAmount * (decimal)2.5);
+                    dealer.Money -= (int)(betAmount * (decimal)2.5);
                     customer.NumWins++;
                     return;
                 }            
@@ -92,6 +93,7 @@ namespace Project1
                 Console.WriteLine("BUST");
                 Console.WriteLine("Dealer Won and got " + betAmount + " from user");
                 customer.Money -= betAmount;
+                dealer.Money += betAmount;
                 customer.NumLosses++;
                 return;
             }
@@ -101,6 +103,7 @@ namespace Project1
                 Console.WriteLine("Dealer BUST");
                 Console.WriteLine("You Won and got " + betAmount + " from dealer");
                 customer.Money += betAmount;
+                dealer.Money -= betAmount;
                 customer.NumWins++;
                 return;
             }
@@ -113,12 +116,14 @@ namespace Project1
             {
                 Console.WriteLine("You Won and got $" + betAmount + " from dealer");
                 customer.Money += betAmount;
+                dealer.Money -= betAmount;
                 customer.NumWins++;
             }
             else if(dealer.HandValue > customer.HandValue)
             {
                 Console.WriteLine("Dealer Won and got $" + betAmount + " from user");
                 customer.Money -= betAmount;
+                dealer.Money += betAmount;
                 customer.NumLosses++;
             }
             else
