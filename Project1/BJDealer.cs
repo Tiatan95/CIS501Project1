@@ -14,6 +14,15 @@ namespace Project1
         public void flipCard(int index)
         {
             hand[index].FaceUp = true;
+            handString.Clear();
+            for(int i =0; i < hand.Length; i++)
+            {
+                if(hand[i] != null)
+                {
+                    handString.Append(hand[i].ToString()+ ", ");
+                }
+            }
+
         }
         //////////////////EDIT///////////////////////////////////////////////
     }

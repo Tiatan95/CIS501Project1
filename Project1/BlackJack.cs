@@ -8,7 +8,7 @@ namespace Project1
 {
     class BlackJack
     {
-        private static Deck d;
+        private Deck d;
         BJDealer dealer;
         BJCustomer customer;
         decimal betAmount;
@@ -47,6 +47,8 @@ namespace Project1
             }while(answer[0] != 'Y' && answer[0] != 'N');
             if(answer[0] == 'Y')
             {
+                customer.HandValue = 0;
+                dealer.HandValue = 0;
                 return true;
             }
             return false;
@@ -63,35 +65,43 @@ namespace Project1
 
             d.Shuffle();
             dealCards();
-
-            if(testNatual21())
+            Console.WriteLine("Your Hand: " + customer.ToString() + " Hand Value:" + customer.HandValue);
+            Console.WriteLine("Dealer Hand: " + dealer.ToString());
+            if (testNatual21())
             {
                 if(customer.HandValue == 21 && dealer.HandValue == 21)
                 {
+                    Console.WriteLine("Both got Natural21");
+                    Console.WriteLine("Stand Off");
                     customer.NumTies++;
                     return;
                 }
                 else
                 {
+                    Console.WriteLine("You got Natural21:  " + ((int)(betAmount * (decimal)2.5)) + " Goes to You from Dealer");
+                    customer.Money += (int)(betAmount * (decimal)2.5);
                     customer.NumWins++;
                     return;
                 }            
             }
-            Console.WriteLine("Your Hand: " + customer.ToString() + " Hand Value:" + customer.HandValue);
-            Console.WriteLine("Dealer Hand: " + dealer.ToString());
             if (testSurrender())
                 return;
             customerTurn(out bust);
             if (bust)
             {
                 Console.WriteLine("BUST");
-                return; 
+                Console.WriteLine("Dealer Won and got " + betAmount + " from user");
+                customer.Money -= betAmount;
+                customer.NumLosses++;
+                return;
             }
             dealerTurn(out bust);
             if(bust)
             {
-                
                 Console.WriteLine("Dealer BUST");
+                Console.WriteLine("You Won and got " + betAmount + " from dealer");
+                customer.Money += betAmount;
+                customer.NumWins++;
                 return;
             }
             determineWinner();
@@ -101,13 +111,13 @@ namespace Project1
         {
             if(customer.HandValue > dealer.HandValue)
             {
-                Console.WriteLine("You Won and got " + betAmount + " from dealer");
+                Console.WriteLine("You Won and got $" + betAmount + " from dealer");
                 customer.Money += betAmount;
                 customer.NumWins++;
             }
             else if(dealer.HandValue > customer.HandValue)
             {
-                Console.WriteLine("Dealer Won and got " + betAmount + "from user");
+                Console.WriteLine("Dealer Won and got $" + betAmount + " from user");
                 customer.Money -= betAmount;
                 customer.NumLosses++;
             }
@@ -126,8 +136,20 @@ namespace Project1
             while (dealer.HandValue < 17)
             {
 #if DEBUG
-                Console.Write("Input next car for dealer (3H, AD, TC, etc. or XX to draw from deck) :");
-                dealer.Draw(Console.ReadLine(), true);
+                bool acceptable = false;
+                while (!acceptable)
+                {
+                    try
+                    {
+                        Console.Write("Input next car for dealer (3H, AD, TC, etc. or XX to draw from deck) :");
+                        dealer.Draw(Console.ReadLine(), true);
+                        acceptable = true;
+                    }
+                    catch
+                    {
+                        acceptable = false;
+                    }
+                }
 #else
                     dealer.Draw("XX", true);
 #endif
@@ -154,8 +176,20 @@ namespace Project1
                 if(answer[0] == 'H')
                 {
 #if DEBUG
-                    Console.Write("Input next car for customer (3H, AD, TC, etc. or XX to draw from deck) :");
-                    customer.Draw(Console.ReadLine(), true);
+                    bool acceptable = false;
+                    while (!acceptable)
+                    {
+                        try
+                        {
+                            Console.Write("Input next car for customer (3H, AD, TC, etc. or XX to draw from deck) :");
+                            customer.Draw(Console.ReadLine(), true);
+                            acceptable = true;
+                        }
+                        catch
+                        {
+                            acceptable = false;
+                        }
+                    }
 #else
                     customer.Draw("XX", true);
 #endif
@@ -170,10 +204,6 @@ namespace Project1
                
             }
         }
-
-
-
-       
         private bool testSurrender()
         {
             string answer = " ";
@@ -211,14 +241,66 @@ namespace Project1
         private void dealCards()
         {
 #if DEBUG
-            Console.Write("Input 1st card for customer(3H, AD, TC, etc.or XX to draw from deck) : ");
-            customer.Draw(Console.ReadLine().ToUpper(),true);
-            Console.Write("Input 1st card for dealer(3H, AD, TC, etc.or XX to draw from deck) : ");
-            dealer.Draw(Console.ReadLine().ToUpper(), true);
-            Console.Write("Input 2nd card for customer (3H, AD, TC, etc. or XX to draw from deck) : ");
-            customer.Draw(Console.ReadLine().ToUpper(), true);
-            Console.Write("Input 2nd card for dealer (3H, AD, TC, etc. or XX to draw from deck) : ");
-            dealer.Draw(Console.ReadLine().ToUpper(), false);
+            bool acceptable = false;
+
+            while (!acceptable)
+            {
+                try
+                {
+                    Console.Write("Input 1st card for customer(3H, AD, TC, etc.or XX to draw from deck) : ");
+                    customer.Draw(Console.ReadLine().ToUpper(), true);
+                    acceptable = true;
+                }
+                catch
+                {
+                    acceptable = false;
+                }
+             
+            }
+            acceptable = false;
+
+            while (!acceptable)
+            {
+                try
+                {
+                    Console.Write("Input 1st card for dealer(3H, AD, TC, etc.or XX to draw from deck) : ");
+                    dealer.Draw(Console.ReadLine().ToUpper(), true);
+                    acceptable = true;
+                }
+                catch
+                {
+                    acceptable = false;
+                }
+            }
+            acceptable = false;
+
+            while (!acceptable)
+            {
+                try
+                {
+                    Console.Write("Input 2nd card for customer (3H, AD, TC, etc. or XX to draw from deck) : ");
+                    customer.Draw(Console.ReadLine().ToUpper(), true);
+                    acceptable = true;
+                }
+                catch
+                {
+                    acceptable = false;
+                }
+            }
+            acceptable = false;
+            while (!acceptable)
+            {
+                try
+                {
+                    Console.Write("Input 2nd card for dealer (3H, AD, TC, etc. or XX to draw from deck) : ");
+                    dealer.Draw(Console.ReadLine().ToUpper(), false);
+                    acceptable = true;
+                }
+                catch
+                {
+                    acceptable = false;
+                }
+            }
             customer.getHandValue();
 #else
             customer.Draw("XX", true);
@@ -241,21 +323,25 @@ namespace Project1
             {
                 b = true;
             }
-
+            Console.WriteLine("You have $" + customer.Money);
             Console.WriteLine("Wins: " + customer.NumWins + ", Losses: " + customer.NumLosses + ", Ties: " + customer.NumTies);
         }
 
         void getUserBet()
         {
-            decimal bet = 0;
             bool b = false;
             Console.Write("Enter Bet Amount: $ ");
             while (!b)
             {
                 try
                 {  
-                    bet = Convert.ToDecimal(Console.ReadLine());
-                    b = true;
+                    betAmount = Convert.ToDecimal(Console.ReadLine());
+                    if(betAmount <= customer.Money && betAmount > 0)
+                        b = true;
+                    else
+                    {
+                        throw new InvalidOperationException(); 
+                    }
                 }
                 catch
                 {

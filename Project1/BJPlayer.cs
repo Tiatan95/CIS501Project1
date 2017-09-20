@@ -12,10 +12,10 @@ namespace Project1
         private Deck deck;
         private int topCardIndex;
         private int handValue;
-        int numCards = 0;
         private decimal money;
         protected StringBuilder handString;
         private int numAces;
+        private int numCards = 0;
         private int LARGEST_HAND_SIZE = 11;
 
         public BJPlayer(decimal m, Deck d)
@@ -75,10 +75,16 @@ namespace Project1
         {
             foreach(Card i in hand)
             {
-                topCardIndex++;
+                if (i != null)
+                {
+                    i.FaceUp = true;
+                    deck.ReturnCard(i);
+                }
             }
             numAces = 0;
+            numCards = 0;
             handValue = 0;
+            hand = new Card[LARGEST_HAND_SIZE];
             handString.Clear();
         }
         public string ToString()
@@ -89,9 +95,10 @@ namespace Project1
         public void getHandValue()
         {
             handValue = 0;
-            for(int i =0; i < numCards; i++)
+            for(int i =0; i < hand.Length; i++)
             {
-                if (hand[i].Rank > 9)
+                if (hand[i] == null) { }
+                else if (hand[i].Rank > 9)
                 {
                     handValue += 10;
                 }
@@ -112,8 +119,6 @@ namespace Project1
                     handValue += 1;
                 }
             }
-
-
         }
 /////////////////////////////////////////////////////////////////////EDIT
 
